@@ -1,0 +1,167 @@
+<div class="container py-3">
+  <ng-container *ngIf="user$ | async as user">
+    <div class="row">
+      <div [formGroup]="linksFormGroup" class="col-md-8">
+        <div formArrayName="links">
+          <h1>Links</h1>
+          <div class="alert alert-info">
+            Enter a descriptive title for your link in the "Link Title" field.
+            This title will be displayed to other users.
+            <hr />
+            Next, enter the URL of your social media profile in the "Profile
+            Link" field. Make sure to provide the direct link to your profile
+            page.
+          </div>
+          <div class="row gx-2 mb-3">
+            <div class="col-5">Link title</div>
+            <div class="col-7">Profile link</div>
+          </div>
+          <div *ngFor="let group of links.controls; let i = index">
+            <div [formGroupName]="i" class="row gx-2 mb-3">
+              <!-- <div class="col-2">
+                          <div class="form-group">
+                              <label for="icon-{{ i }}">Icon</label>
+                              <input type="text" id="icon-{{ i }}" placeholder="Link icon" class="form-control" formControlName="linkIcon">
+                          </div>
+                      </div> -->
+              <div class="col-5">
+                <div class="form-group">
+                  <input
+                    type="text"
+                    id="linkTitle-{{ i }}"
+                    placeholder="Link icon"
+                    class="form-control"
+                    formControlName="linkTitle"
+                  />
+                </div>
+              </div>
+              <div class="col-7">
+                <div class="form-group">
+                  <div class="row gx-2">
+                    <div class="col-9">
+                      <input
+                        type="text"
+                        id="link-{{ i }}"
+                        placeholder="Actual link"
+                        class="form-control"
+                        formControlName="link"
+                      />
+                    </div>
+                    <div class="col-3">
+                      <button
+                        (click)="removeLink(i)"
+                        class="btn w-100 btn-danger"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div [formGroup]="addLinksFormGroup" class="row gx-2 mb-3">
+          <h2>Add new profile link</h2>
+          <!-- <div class="col-2">
+                  <div class="form-group">
+                      <label for="icon">Icon</label>
+                      <input type="text" id="icon" placeholder="Link icon" class="form-control" formControlName="linkIcon">
+                  </div>
+              </div> -->
+          <div class="col-5">
+            <div class="form-group">
+              <label for="linkTitle">Link title</label>
+              <input
+                type="text"
+                id="linkTitle"
+                placeholder="Enter a descriptive title"
+                class="form-control"
+                formControlName="linkTitle"
+              />
+            </div>
+          </div>
+          <div class="col-7">
+            <div class="form-group">
+              <label for="link">Profile link</label>
+              <div class="row gx-1">
+                <div class="col-9">
+                  <input
+                    type="text"
+                    id="link"
+                    placeholder="Actual your profile link"
+                    class="form-control"
+                    formControlName="link"
+                  />
+                </div>
+                <div class="col-3">
+                  <button
+                    (click)="addLinks(addLinksFormGroup.value)"
+                    [disabled]="addLinksFormGroup.invalid"
+                    class="btn btn-primary w-100"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div
+          style="gap: 15px"
+          class="card bg-light card-body d-flex flex-column align-items-center"
+        >
+          <div
+            class="border bg-dark text-white rounded-circle d-flex align-items-center font-weight-bold justify-content-center"
+            style="width: 100px; height: 100px; font-size: 48px"
+          >
+            {{ user.userName.slice(0, 1) }}
+          </div>
+          {{ "@" + user.userName }}
+          <div class="text-secondary">{{ user.about }}</div>
+          <a
+            target="_blank"
+            style="text-decoration: none"
+            [class.bg-success-subtle]="linksUpdatedSuccess"
+            [class.border-success]="linksUpdatedSuccess"
+            class="card w-100"
+            [href]="link['link']"
+            *ngFor="let link of linksFormGroup.value.links"
+          >
+            <div
+              class="card-body text-decoration-none d-flex justify-content-center"
+            >
+              {{ link["linkTitle"] }}
+            </div>
+          </a>
+          <!-- update success -->
+          <div
+            class="alert w-100 mb-0 alert-success"
+            *ngIf="linksUpdatedSuccess"
+          >
+            {{ linksUpdatedSuccess }}
+          </div>
+          <!-- for save error alert -->
+          <div
+            class="alert w-100 mb-0 alert-warning"
+            *ngIf="linksFormGroup.invalid"
+          >
+            ⚠️️ Please add at least one profile link to save
+          </div>
+          <button
+            (click)="save()"
+            [disabled]="linksFormGroup.invalid"
+            class="btn btn-primary w-100"
+          >
+            Save
+          </button>
+        </div>
+        <a routerLink="/{{ user.userName }}" class="btn btn-link w-100"
+          >View as guest</a
+        >
+      </div>
+    </div>
+  </ng-container>
+</div>

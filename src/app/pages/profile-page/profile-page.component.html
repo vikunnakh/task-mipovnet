@@ -1,0 +1,192 @@
+<ng-container *ngIf="user$ | async as user">
+  <div class="container py-3">
+    <div class="alert alert-warning" *ngIf="!user.isVerified">
+      Please check your email for the verification code.
+      <a routerLink="/email-verification">verify email</a>
+    </div>
+    <h2>Personal info</h2>
+    <div class="card mb-3">
+      <div class="card-body">
+        <form [formGroup]="personalInfoFormGroup">
+          <label for="userName">User name:</label>
+          <div
+            [class.has-validation]="updateUserNameFirstNameLastNameAboutError"
+            class="input-group mb-3"
+          >
+            <span class="input-group-text"
+              ><span class="text-success">https:</span>//mipov.net/</span
+            >
+            <input
+              [class.is-valid]="updateUserNameFirstNameLastNameAboutSuccess"
+              [class.is-invalid]="updateUserNameFirstNameLastNameAboutError"
+              class="form-control"
+              id="userName"
+              type="text"
+              formControlName="userName"
+              placeholder="Unique user name"
+            />
+            <!-- frontend validation -->
+            <div
+              *ngIf="updateUserNameFirstNameLastNameAboutError"
+              class="invalid-feedback"
+            >
+              {{ updateUserNameFirstNameLastNameAboutError }}
+            </div>
+          </div>
+          <label for="name">First name:</label>
+          <div class="input-group mb-3">
+            <span class="input-group-text">👤</span>
+            <input
+              [class.is-valid]="updateUserNameFirstNameLastNameAboutSuccess"
+              class="form-control"
+              id="name"
+              type="text"
+              formControlName="firstName"
+            />
+          </div>
+          <label for="lastName">Last name:</label>
+          <div class="input-group mb-3">
+            <span class="input-group-text">🎩</span>
+            <input
+              [class.is-valid]="updateUserNameFirstNameLastNameAboutSuccess"
+              class="form-control"
+              id="lastName"
+              type="text"
+              formControlName="lastName"
+            />
+          </div>
+          <label for="about">About:</label>
+          <div class="input-group mb-3">
+            <textarea
+              [class.is-valid]="updateUserNameFirstNameLastNameAboutSuccess"
+              formControlName="about"
+              id="about"
+              class="form-control"
+            ></textarea>
+          </div>
+          <!-- success alert -->
+          <div
+            *ngIf="updateUserNameFirstNameLastNameAboutSuccess"
+            class="alert alert-success"
+          >
+            🎉 Your personal information successfully updated.
+          </div>
+          <button
+            (click)="updateUserNameFirstNameLastNameAbout()"
+            class="btn btn-success w-100"
+            [disabled]="
+              personalInfoFormGroup.invalid ||
+              updateUserNameFirstNameLastNameAboutSuccess
+            "
+          >
+            Save
+          </button>
+        </form>
+      </div>
+    </div>
+    <!-- email card -->
+    <h2>Email</h2>
+    <div class="card mb-3">
+      <div class="card-body">
+        <label for="email">Email:</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text">✉️</span>
+          <input
+            [disabled]="true"
+            [value]="email.value"
+            class="form-control"
+            id="email"
+            type="type"
+          />
+          <!-- backend validation -->
+          <div class="invalid-feedback" *ngIf="error?.errorType == 'email'">
+            {{ error.message }}
+          </div>
+        </div>
+        <div class="alert alert-warning mb-0">
+          You'll be able to change the email address associated with your
+          account. Thank you for your patience!
+        </div>
+      </div>
+    </div>
+    <h2>Password</h2>
+    <div class="card">
+      <div class="card-body">
+        <form [formGroup]="passwordsFormGroup">
+          <label for="password">Password:</label>
+          <div class="input-group mb-2">
+            <span class="input-group-text">🔒</span>
+            <input
+              [class.is-valid]="updatePasswordSuccess"
+              [class.is-invalid]="updatePasswordError"
+              class="form-control"
+              id="password"
+              [type]="showOldPassword ? 'text' : 'password'"
+              formControlName="oldPassword"
+            />
+          </div>
+          <div class="form-check mb-3">
+            <input
+              (change)="showOldPassword = !showOldPassword"
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="showOldPassword"
+            />
+            <label
+              class="form-check-label text-primary user-select-none"
+              for="showOldPassword"
+              ><u>{{ !showOldPassword ? "Show" : "Hide" }} password</u></label
+            >
+          </div>
+
+          <!-- invalid password message -->
+          <div *ngIf="updatePasswordError" class="alert alert-danger">
+            {{ updatePasswordError }}
+          </div>
+
+          <label for="newPassword">New password:</label>
+          <div class="input-group mb-2">
+            <span class="input-group-text">🔒</span>
+            <input
+              [class.is-valid]="updatePasswordSuccess"
+              class="form-control"
+              id="newPassword"
+              [type]="showNewPassword ? 'text' : 'password'"
+              formControlName="newPassword"
+            />
+          </div>
+          <div class="form-check mb-3">
+            <input
+              (change)="showNewPassword = !showNewPassword"
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="showNewPassword"
+            />
+            <label
+              class="form-check-label text-primary user-select-none"
+              for="showNewPassword"
+              ><u
+                >{{ !showNewPassword ? "Show" : "Hide" }} new password</u
+              ></label
+            >
+          </div>
+
+          <!-- success password message -->
+          <div *ngIf="updatePasswordSuccess" class="alert alert-success">
+            {{ updatePasswordSuccess }}
+          </div>
+
+          <button
+            class="btn btn-success w-100"
+            (click)="updatePassword()"
+            [disabled]="passwordsFormGroup.invalid || updatePasswordSuccess"
+          >
+            Change password
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-container>
